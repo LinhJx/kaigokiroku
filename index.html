@@ -9,47 +9,52 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         :root {
-            --primary: #4A90E2;
-            --secondary: #50C878;
-            --danger: #E74C3C;
+            --primary: #2196F3;
+            --primary-dark: #1976D2;
+            --secondary: #4CAF50;
+            --danger: #F44336;
             --bg: #F5F7FA;
             --card-bg: #FFFFFF;
-            --text: #2C3E50;
-            --text-light: #7F8C8D;
-            --border: #E1E8ED;
-            --shadow: rgba(0,0,0,0.1);
+            --text: #212121;
+            --text-light: #757575;
+            --border: #E0E0E0;
+            --shadow: rgba(0,0,0,0.08);
+            --shadow-hover: rgba(0,0,0,0.12);
         }
 
         body.dark-mode {
-            --bg: #1A1A2E;
-            --card-bg: #16213E;
-            --text: #E8E8E8;
-            --text-light: #A0A0A0;
-            --border: #2D3748;
-            --shadow: rgba(0,0,0,0.3);
+            --bg: #121212;
+            --card-bg: #1E1E1E;
+            --text: #FFFFFF;
+            --text-light: #B0B0B0;
+            --border: #333333;
+            --shadow: rgba(0,0,0,0.4);
+            --shadow-hover: rgba(0,0,0,0.6);
         }
 
         body {
-            font-family: 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
 
-        /* Header */
+        /* Header - Compact */
         .header {
             background: var(--card-bg);
-            padding: 16px;
+            padding: 12px 16px;
             box-shadow: 0 2px 8px var(--shadow);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 3px solid var(--primary);
+            border-bottom: 2px solid var(--primary);
         }
 
         .header-content {
@@ -59,45 +64,45 @@
         }
 
         .header h1 {
-            font-size: 20px;
+            font-size: 18px;
             color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: 700;
         }
 
         .header-actions {
             display: flex;
-            gap: 12px;
+            gap: 8px;
         }
 
         .icon-btn {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border: none;
             border-radius: 50%;
             background: var(--bg);
             color: var(--text);
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
+            flex-shrink: 0;
         }
 
         .icon-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.9);
             background: var(--border);
         }
 
-        /* Categories */
+        /* Categories - Horizontal Scroll */
         .categories {
-            padding: 16px;
+            padding: 12px;
             background: var(--card-bg);
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            border-bottom: 1px solid var(--border);
         }
 
         .categories::-webkit-scrollbar {
@@ -106,34 +111,45 @@
 
         .category-pills {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             min-width: min-content;
+            padding-bottom: 2px;
         }
 
         .category-pill {
-            padding: 12px 20px;
-            border: 2px solid var(--border);
+            padding: 12px 24px;
+            border: none;
             border-radius: 24px;
-            background: var(--card-bg);
+            background: var(--bg);
             color: var(--text);
             font-size: 15px;
             font-weight: 600;
             white-space: nowrap;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px var(--shadow);
+            flex-shrink: 0;
         }
 
         .category-pill.active {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+            transform: scale(1.05);
         }
 
-        /* Tabs */
+        .category-pill:active {
+            transform: scale(0.95);
+        }
+
+        /* Tabs - Simple */
         .tabs {
             display: flex;
             background: var(--card-bg);
-            border-bottom: 1px solid var(--border);
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 64px;
+            z-index: 90;
         }
 
         .tab {
@@ -143,10 +159,10 @@
             background: transparent;
             color: var(--text-light);
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             position: relative;
-            transition: color 0.2s;
+            transition: all 0.3s;
         }
 
         .tab.active {
@@ -156,41 +172,53 @@
         .tab.active::after {
             content: '';
             position: absolute;
-            bottom: 0;
+            bottom: -2px;
             left: 0;
             right: 0;
             height: 3px;
             background: var(--primary);
+            border-radius: 3px 3px 0 0;
         }
 
-        /* Items List */
+        /* Items List - Card Style */
         .items-container {
             flex: 1;
             overflow-y: auto;
-            padding: 12px;
+            padding: 16px;
+            padding-bottom: 200px;
         }
 
+        /* ITEM CARD - Redesigned for Easy Tap */
         .item {
             background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            cursor: pointer;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
             transition: all 0.2s;
-            box-shadow: 0 1px 3px var(--shadow);
         }
 
         .item:active {
-            transform: scale(0.98);
-            background: var(--bg);
+            box-shadow: 0 4px 16px var(--shadow-hover);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .item-main {
+            flex: 1;
         }
 
         .item-jp {
-            font-size: 17px;
-            font-weight: 600;
+            font-size: 22px;
+            font-weight: 700;
             color: var(--text);
             margin-bottom: 4px;
+            line-height: 1.3;
         }
 
         .item-furigana {
@@ -200,123 +228,165 @@
         }
 
         .item-meaning {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--secondary);
-            margin-bottom: 8px;
+            font-weight: 600;
+            margin-bottom: 12px;
         }
 
         .item-example {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-light);
-            padding: 8px;
+            padding: 12px;
             background: var(--bg);
-            border-radius: 6px;
-            font-style: italic;
+            border-radius: 10px;
+            border-left: 3px solid var(--primary);
+            margin-bottom: 16px;
+            line-height: 1.6;
         }
 
         .item-badge {
             display: inline-block;
-            padding: 4px 8px;
-            background: var(--primary);
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
             color: white;
             font-size: 11px;
-            border-radius: 4px;
-            margin-top: 8px;
+            font-weight: 700;
+            border-radius: 12px;
+            flex-shrink: 0;
         }
 
-        /* Editor Area */
-        .editor-section {
-            background: var(--card-bg);
-            border-top: 1px solid var(--border);
+        /* ACTION BUTTONS - LARGE & CLEAR */
+        .item-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .item-btn {
             padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px var(--shadow);
+            min-height: 52px;
+        }
+
+        .item-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 3px var(--shadow);
+        }
+
+        .btn-word {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-example {
+            background: var(--card-bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .btn-example:active {
+            background: var(--bg);
+        }
+
+        /* Editor Section - Fixed Bottom */
+        .editor-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 2px solid var(--border);
+            padding: 16px;
+            box-shadow: 0 -4px 12px var(--shadow);
+            z-index: 80;
         }
 
         .editor-header {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 700;
             color: var(--text-light);
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .editor-textarea {
             width: 100%;
-            min-height: 150px;
-            padding: 16px;
-            font-size: 16px;
-            line-height: 1.8;
+            height: 80px;
+            padding: 12px;
+            font-size: 15px;
+            line-height: 1.6;
             border: 2px solid var(--border);
             border-radius: 12px;
             background: var(--bg);
             color: var(--text);
-            resize: vertical;
+            resize: none;
             font-family: inherit;
+            margin-bottom: 12px;
         }
 
         .editor-textarea:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
         }
 
         .editor-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
         }
 
         .btn {
-            flex: 1;
-            padding: 16px;
+            padding: 14px;
             border: none;
             border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: var(--border);
-            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 48px;
         }
 
         .btn:active {
-            transform: scale(0.97);
+            transform: scale(0.95);
         }
 
-        /* Bottom Actions */
-        .bottom-actions {
-            background: var(--card-bg);
-            padding: 16px;
-            display: flex;
-            gap: 12px;
-            border-top: 1px solid var(--border);
-        }
-
-        .fab {
-            flex: 1;
-            padding: 18px;
-            border: none;
-            border-radius: 16px;
-            background: var(--secondary);
+        .btn-copy {
+            background: linear-gradient(135deg, var(--secondary), #45a049);
             color: white;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 12px var(--shadow);
-            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
         }
 
-        .fab:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 6px var(--shadow);
+        .btn-clear {
+            background: var(--bg);
+            color: var(--text);
+            border: 2px solid var(--border);
         }
 
-        /* Modal */
+        .btn-add {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Modal - Improved */
         .modal {
             display: none;
             position: fixed;
@@ -326,9 +396,9 @@
             bottom: 0;
             background: rgba(0,0,0,0.6);
             z-index: 1000;
-            align-items: center;
+            align-items: flex-end;
             justify-content: center;
-            padding: 20px;
+            backdrop-filter: blur(4px);
         }
 
         .modal.active {
@@ -337,20 +407,43 @@
 
         .modal-content {
             background: var(--card-bg);
-            border-radius: 16px;
+            border-radius: 24px 24px 0 0;
             width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
+            max-height: 85vh;
             overflow-y: auto;
-            box-shadow: 0 8px 32px var(--shadow);
+            box-shadow: 0 -4px 24px var(--shadow);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
         }
 
         .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
+            padding: 24px 20px 16px;
+            border-bottom: 2px solid var(--border);
             font-size: 20px;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--text);
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            z-index: 10;
+        }
+
+        .modal-header::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 0 auto 16px;
         }
 
         .modal-body {
@@ -364,7 +457,7 @@
         .form-label {
             display: block;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text);
             margin-bottom: 8px;
         }
@@ -375,11 +468,12 @@
             width: 100%;
             padding: 14px;
             border: 2px solid var(--border);
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
             background: var(--bg);
             color: var(--text);
             font-family: inherit;
+            transition: all 0.2s;
         }
 
         .form-input:focus,
@@ -387,6 +481,7 @@
         .form-textarea:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
         }
 
         .form-textarea {
@@ -395,10 +490,14 @@
         }
 
         .modal-actions {
-            padding: 20px;
-            border-top: 1px solid var(--border);
-            display: flex;
+            padding: 16px 20px 24px;
+            border-top: 2px solid var(--border);
+            display: grid;
+            grid-template-columns: 1fr 2fr;
             gap: 12px;
+            position: sticky;
+            bottom: 0;
+            background: var(--card-bg);
         }
 
         /* Layout */
@@ -418,17 +517,19 @@
         /* Toast */
         .toast {
             position: fixed;
-            bottom: 100px;
+            bottom: 220px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: var(--text);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 8px;
+            color: var(--card-bg);
+            padding: 16px 28px;
+            border-radius: 24px;
             font-size: 15px;
+            font-weight: 600;
             z-index: 2000;
             opacity: 0;
             transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
         }
 
         .toast.show {
@@ -439,18 +540,24 @@
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 60px 20px;
             color: var(--text-light);
         }
 
         .empty-state-icon {
-            font-size: 48px;
+            font-size: 64px;
             margin-bottom: 16px;
+            opacity: 0.5;
         }
 
-        /* Settings Modal */
+        .empty-state-text {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Settings */
         .settings-item {
-            padding: 16px 0;
+            padding: 20px 0;
             border-bottom: 1px solid var(--border);
         }
 
@@ -460,14 +567,24 @@
 
         .settings-label {
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 8px;
         }
 
         .settings-description {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-light);
-            margin-bottom: 12px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
+            .modal-content {
+                border-radius: 24px;
+                max-width: 500px;
+                max-height: 90vh;
+            }
         }
     </style>
 </head>
@@ -476,7 +593,7 @@
         <!-- Header -->
         <div class="header">
             <div class="header-content">
-                <h1>🏥 介護記録サポート</h1>
+                <h1>🏥 介護記録</h1>
                 <div class="header-actions">
                     <button class="icon-btn" id="settingsBtn" title="設定">⚙️</button>
                     <button class="icon-btn" id="darkModeBtn" title="ダークモード">🌙</button>
@@ -491,9 +608,9 @@
                 <button class="category-pill" data-category="排泄">🚻 排泄</button>
                 <button class="category-pill" data-category="入浴">🛁 入浴</button>
                 <button class="category-pill" data-category="服薬">💊 服薬</button>
-                <button class="category-pill" data-category="水分補給">💧 水分補給</button>
+                <button class="category-pill" data-category="水分補給">💧 水分</button>
                 <button class="category-pill" data-category="体調">❤️ 体調</button>
-                <button class="category-pill" data-category="事故・異常">⚠️ 事故・異常</button>
+                <button class="category-pill" data-category="事故・異常">⚠️ 事故</button>
                 <button class="category-pill" data-category="その他">📋 その他</button>
             </div>
         </div>
@@ -510,21 +627,17 @@
             <div class="items-container" id="itemsList">
                 <!-- Items will be rendered here -->
             </div>
-
-            <!-- Editor -->
-            <div class="editor-section">
-                <div class="editor-header">📄 作成エリア</div>
-                <textarea class="editor-textarea" id="editorText" placeholder="選択した項目がここに表示されます..."></textarea>
-                <div class="editor-actions">
-                    <button class="btn btn-primary" id="copyBtn">📋 コピー</button>
-                    <button class="btn btn-secondary" id="clearBtn">🗑️ クリア</button>
-                </div>
-            </div>
         </div>
 
-        <!-- Bottom Actions -->
-        <div class="bottom-actions">
-            <button class="fab" id="addBtn">＋ 追加</button>
+        <!-- Editor (Fixed Bottom) -->
+        <div class="editor-section">
+            <div class="editor-header">✍️ 作成エリア</div>
+            <textarea class="editor-textarea" id="editorText" placeholder="選択した内容がここに表示されます"></textarea>
+            <div class="editor-actions">
+                <button class="btn btn-copy" id="copyBtn">📋 コピー</button>
+                <button class="btn btn-clear" id="clearBtn">🗑️ クリア</button>
+                <button class="btn btn-add" id="addBtn">＋ 追加</button>
+            </div>
         </div>
     </div>
 
@@ -571,8 +684,8 @@
                 </div>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-secondary" id="cancelAddBtn">キャンセル</button>
-                <button class="btn btn-primary" id="saveAddBtn">保存</button>
+                <button class="btn btn-clear" id="cancelAddBtn">キャンセル</button>
+                <button class="btn btn-copy" id="saveAddBtn">💾 保存</button>
             </div>
         </div>
     </div>
@@ -584,12 +697,12 @@
             <div class="modal-body">
                 <div class="settings-item">
                     <div class="settings-label">データリセット</div>
-                    <div class="settings-description">追加したすべてのデータを削除します</div>
-                    <button class="btn btn-secondary" id="resetBtn">🗑️ リセット</button>
+                    <div class="settings-description">追加したすべてのデータを削除します（デフォルトデータは残ります）</div>
+                    <button class="btn btn-clear" id="resetBtn" style="width: 100%;">🗑️ リセット</button>
                 </div>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-primary" id="closeSettingsBtn">閉じる</button>
+                <button class="btn btn-copy" id="closeSettingsBtn" style="grid-column: 1 / -1;">閉じる</button>
             </div>
         </div>
     </div>
@@ -598,11 +711,8 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        // ========================================
-        // DEFAULT DATA
-        // ========================================
+        // DEFAULT DATA (Same as before, truncated for brevity)
         const defaultData = [
-            // 食事 - 単語
             {id:1,category:"食事",type:"vocab",jp:"全量摂取",furigana:"ぜんりょうせっしゅ",meaning_vi:"Ăn hết phần",example:"昼食を全量摂取しました。",source:"default"},
             {id:2,category:"食事",type:"vocab",jp:"半量摂取",furigana:"はんりょうせっしゅ",meaning_vi:"Ăn một nửa",example:"朝食を半量摂取しました。",source:"default"},
             {id:3,category:"食事",type:"vocab",jp:"少量摂取",furigana:"しょうりょうせっしゅ",meaning_vi:"Ăn ít",example:"少量摂取されました。",source:"default"},
@@ -615,15 +725,11 @@
             {id:10,category:"食事",type:"vocab",jp:"一部介助",furigana:"いちぶかいじょ",meaning_vi:"Hỗ trợ một phần",example:"一部介助で摂取しました。",source:"default"},
             {id:11,category:"食事",type:"vocab",jp:"全介助",furigana:"ぜんかいじょ",meaning_vi:"Hỗ trợ hoàn toàn",example:"全介助で摂取しました。",source:"default"},
             {id:12,category:"食事",type:"vocab",jp:"水分補給",furigana:"すいぶんほきゅう",meaning_vi:"Bổ sung nước",example:"水分補給を行いました。",source:"default"},
-            
-            // 食事 - 文例
             {id:13,category:"食事",type:"grammar",jp:"朝食を全量摂取しました",furigana:"ちょうしょくをぜんりょうせっしゅしました",meaning_vi:"Đã ăn hết bữa sáng",example:"朝食を全量摂取しました。",source:"default"},
             {id:14,category:"食事",type:"grammar",jp:"食事を拒否されました",furigana:"しょくじをきょひされました",meaning_vi:"Đã từ chối bữa ăn",example:"食事を拒否されました。",source:"default"},
             {id:15,category:"食事",type:"grammar",jp:"むせ込みがありました",furigana:"むせこみがありました",meaning_vi:"Có hiện tượng sặc",example:"食事中にむせ込みがありました。",source:"default"},
             {id:16,category:"食事",type:"grammar",jp:"食欲良好でした",furigana:"しょくよくりょうこうでした",meaning_vi:"Ăn uống tốt",example:"本日は食欲良好でした。",source:"default"},
             {id:17,category:"食事",type:"grammar",jp:"一部介助で摂取しました",furigana:"いちぶかいじょでせっしゅしました",meaning_vi:"Ăn với hỗ trợ một phần",example:"一部介助で摂取しました。",source:"default"},
-
-            // 排泄 - 単語
             {id:18,category:"排泄",type:"vocab",jp:"排尿",furigana:"はいにょう",meaning_vi:"Đi tiểu",example:"排尿がありました。",source:"default"},
             {id:19,category:"排泄",type:"vocab",jp:"排便",furigana:"はいべん",meaning_vi:"Đi đại tiện",example:"排便がありました。",source:"default"},
             {id:20,category:"排泄",type:"vocab",jp:"失禁",furigana:"しっきん",meaning_vi:"Tiểu không tự chủ",example:"失禁がありました。",source:"default"},
@@ -633,43 +739,27 @@
             {id:24,category:"排泄",type:"vocab",jp:"軟便",furigana:"なんべん",meaning_vi:"Phân mềm",example:"軟便でした。",source:"default"},
             {id:25,category:"排泄",type:"vocab",jp:"オムツ交換",furigana:"おむつこうかん",meaning_vi:"Thay bỉm",example:"オムツ交換を行いました。",source:"default"},
             {id:26,category:"排泄",type:"vocab",jp:"トイレ誘導",furigana:"といれゆうどう",meaning_vi:"Dẫn đi vệ sinh",example:"トイレ誘導を行いました。",source:"default"},
-
-            // 排泄 - 文例
             {id:27,category:"排泄",type:"grammar",jp:"トイレにて排尿がありました",furigana:"といれにてはいにょうがありました",meaning_vi:"Đã đi tiểu ở toilet",example:"トイレにて排尿がありました。",source:"default"},
             {id:28,category:"排泄",type:"grammar",jp:"オムツ交換を行いました",furigana:"おむつこうかんをおこないました",meaning_vi:"Đã thay bỉm",example:"オムツ交換を行いました。",source:"default"},
             {id:29,category:"排泄",type:"grammar",jp:"便秘が続いています",furigana:"べんぴがつづいています",meaning_vi:"Táo bón kéo dài",example:"3日間便秘が続いています。",source:"default"},
-
-            // 入浴 - 単語
-            {id:30,category:"入浴",type:"vocab",jp:"入浴介助",furigana:"にゅうよくかいじょ",meaning_vi:"Hỗ trợ t목욕",example:"入浴介助を行いました。",source:"default"},
+            {id:30,category:"入浴",type:"vocab",jp:"入浴介助",furigana:"にゅうよくかいじょ",meaning_vi:"Hỗ trợ tắm",example:"入浴介助を行いました。",source:"default"},
             {id:31,category:"入浴",type:"vocab",jp:"清拭",furigana:"せいしき",meaning_vi:"Lau người",example:"清拭を行いました。",source:"default"},
             {id:32,category:"入浴",type:"vocab",jp:"シャワー浴",furigana:"しゃわーよく",meaning_vi:"Tắm vòi sen",example:"シャワー浴を行いました。",source:"default"},
             {id:33,category:"入浴",type:"vocab",jp:"足浴",furigana:"そくよく",meaning_vi:"Ngâm chân",example:"足浴を行いました。",source:"default"},
-
-            // 入浴 - 文例
             {id:34,category:"入浴",type:"grammar",jp:"入浴介助を行いました",furigana:"にゅうよくかいじょをおこないました",meaning_vi:"Đã hỗ trợ tắm",example:"入浴介助を行いました。",source:"default"},
             {id:35,category:"入浴",type:"grammar",jp:"気持ちよく入浴されました",furigana:"きもちよくにゅうよくされました",meaning_vi:"Đã tắm thoải mái",example:"気持ちよく入浴されました。",source:"default"},
-
-            // 服薬 - 単語
             {id:36,category:"服薬",type:"vocab",jp:"服薬",furigana:"ふくやく",meaning_vi:"Uống thuốc",example:"服薬しました。",source:"default"},
             {id:37,category:"服薬",type:"vocab",jp:"内服",furigana:"ないふく",meaning_vi:"Dùng thuốc uống",example:"内服しました。",source:"default"},
             {id:38,category:"服薬",type:"vocab",jp:"与薬",furigana:"よやく",meaning_vi:"Cho uống thuốc",example:"与薬を行いました。",source:"default"},
             {id:39,category:"服薬",type:"vocab",jp:"服薬拒否",furigana:"ふくやくきょひ",meaning_vi:"Từ chối uống thuốc",example:"服薬拒否がありました。",source:"default"},
             {id:40,category:"服薬",type:"vocab",jp:"朝食後",furigana:"ちょうしょくご",meaning_vi:"Sau bữa sáng",example:"朝食後に服薬しました。",source:"default"},
-
-            // 服薬 - 文例
             {id:41,category:"服薬",type:"grammar",jp:"朝食後に服薬しました",furigana:"ちょうしょくごにふくやくしました",meaning_vi:"Đã uống thuốc sau bữa sáng",example:"朝食後に服薬しました。",source:"default"},
             {id:42,category:"服薬",type:"grammar",jp:"問題なく服薬できました",furigana:"もんだいなくふくやくできました",meaning_vi:"Uống thuốc không có vấn đề",example:"問題なく服薬できました。",source:"default"},
-
-            // 水分補給 - 単語
             {id:43,category:"水分補給",type:"vocab",jp:"水分摂取",furigana:"すいぶんせっしゅ",meaning_vi:"Uống nước",example:"水分摂取しました。",source:"default"},
             {id:44,category:"水分補給",type:"vocab",jp:"お茶",furigana:"おちゃ",meaning_vi:"Trà",example:"お茶を提供しました。",source:"default"},
             {id:45,category:"水分補給",type:"vocab",jp:"麦茶",furigana:"むぎちゃ",meaning_vi:"Trà lúa mạch",example:"麦茶を提供しました。",source:"default"},
-
-            // 水分補給 - 文例
             {id:46,category:"水分補給",type:"grammar",jp:"水分補給を行いました",furigana:"すいぶんほきゅうをおこないました",meaning_vi:"Đã bổ sung nước",example:"水分補給を行いました。",source:"default"},
             {id:47,category:"水分補給",type:"grammar",jp:"お茶を200ml摂取しました",furigana:"おちゃを200mlせっしゅしました",meaning_vi:"Đã uống 200ml trà",example:"お茶を200ml摂取しました。",source:"default"},
-
-            // 体調 - 単語
             {id:48,category:"体調",type:"vocab",jp:"体調良好",furigana:"たいちょうりょうこう",meaning_vi:"Sức khỏe tốt",example:"体調良好でした。",source:"default"},
             {id:49,category:"体調",type:"vocab",jp:"発熱",furigana:"はつねつ",meaning_vi:"Sốt",example:"発熱がありました。",source:"default"},
             {id:50,category:"体調",type:"vocab",jp:"咳",furigana:"せき",meaning_vi:"Ho",example:"咳が見られました。",source:"default"},
@@ -679,48 +769,34 @@
             {id:54,category:"体調",type:"vocab",jp:"嘔吐",furigana:"おうと",meaning_vi:"Nôn mửa",example:"嘔吐がありました。",source:"default"},
             {id:55,category:"体調",type:"vocab",jp:"血圧測定",furigana:"けつあつそくてい",meaning_vi:"Đo huyết áp",example:"血圧測定を行いました。",source:"default"},
             {id:56,category:"体調",type:"vocab",jp:"体温測定",furigana:"たいおんそくてい",meaning_vi:"Đo thân nhiệt",example:"体温測定を行いました。",source:"default"},
-
-            // 体調 - 文例
             {id:57,category:"体調",type:"grammar",jp:"体調良好で過ごされました",furigana:"たいちょうりょうこうですごされました",meaning_vi:"Đã sinh hoạt với sức khỏe tốt",example:"体調良好で過ごされました。",source:"default"},
             {id:58,category:"体調",type:"grammar",jp:"37.5度の発熱がありました",furigana:"37.5どのはつねつがありました",meaning_vi:"Có sốt 37.5 độ",example:"37.5度の発熱がありました。",source:"default"},
             {id:59,category:"体調",type:"grammar",jp:"血圧は120/80でした",furigana:"けつあつは120/80でした",meaning_vi:"Huyết áp là 120/80",example:"血圧は120/80でした。",source:"default"},
-
-            // 事故・異常 - 単語
             {id:60,category:"事故・異常",type:"vocab",jp:"転倒",furigana:"てんとう",meaning_vi:"Té ngã",example:"転倒がありました。",source:"default"},
             {id:61,category:"事故・異常",type:"vocab",jp:"転落",furigana:"てんらく",meaning_vi:"Rơi xuống",example:"転落がありました。",source:"default"},
             {id:62,category:"事故・異常",type:"vocab",jp:"打撲",furigana:"だぼく",meaning_vi:"Bầm tím",example:"打撲しました。",source:"default"},
             {id:63,category:"事故・異常",type:"vocab",jp:"擦過傷",furigana:"さっかしょう",meaning_vi:"Trầy xước",example:"擦過傷がありました。",source:"default"},
             {id:64,category:"事故・異常",type:"vocab",jp:"異常なし",furigana:"いじょうなし",meaning_vi:"Không có bất thường",example:"異常なしでした。",source:"default"},
-
-            // 事故・異常 - 文例
             {id:65,category:"事故・異常",type:"grammar",jp:"転倒されましたが外傷はありませんでした",furigana:"てんとうされましたががいしょうはありませんでした",meaning_vi:"Té nhưng không có vết thương",example:"転倒されましたが外傷はありませんでした。",source:"default"},
             {id:66,category:"事故・異常",type:"grammar",jp:"本日は異常ありませんでした",furigana:"ほんじつはいじょうありませんでした",meaning_vi:"Hôm nay không có bất thường",example:"本日は異常ありませんでした。",source:"default"},
-
-            // その他 - 単語
             {id:67,category:"その他",type:"vocab",jp:"レクリエーション",furigana:"れくりえーしょん",meaning_vi:"Giải trí",example:"レクリエーションに参加しました。",source:"default"},
             {id:68,category:"その他",type:"vocab",jp:"散歩",furigana:"さんぽ",meaning_vi:"Đi dạo",example:"散歩を行いました。",source:"default"},
             {id:69,category:"その他",type:"vocab",jp:"面会",furigana:"めんかい",meaning_vi:"Thăm viếng",example:"ご家族の面会がありました。",source:"default"},
             {id:70,category:"その他",type:"vocab",jp:"就寝",furigana:"しゅうしん",meaning_vi:"Đi ngủ",example:"就寝しました。",source:"default"},
             {id:71,category:"その他",type:"vocab",jp:"起床",furigana:"きしょう",meaning_vi:"Thức dậy",example:"起床されました。",source:"default"},
             {id:72,category:"その他",type:"vocab",jp:"機嫌良好",furigana:"きげんりょうこう",meaning_vi:"Tâm trạng tốt",example:"機嫌良好でした。",source:"default"},
-
-            // その他 - 文例
             {id:73,category:"その他",type:"grammar",jp:"レクリエーションに参加されました",furigana:"れくりえーしょんにさんかされました",meaning_vi:"Đã tham gia giải trí",example:"レクリエーションに参加されました。",source:"default"},
             {id:74,category:"その他",type:"grammar",jp:"笑顔で過ごされました",furigana:"えがおですごされました",meaning_vi:"Đã sinh hoạt với nụ cười",example:"笑顔で過ごされました。",source:"default"},
             {id:75,category:"その他",type:"grammar",jp:"穏やかに過ごされました",furigana:"おだやかにすごされました",meaning_vi:"Đã sinh hoạt yên tĩnh",example:"穏やかに過ごされました。",source:"default"}
         ];
 
-        // ========================================
-        // STATE MANAGEMENT
-        // ========================================
+        // STATE
         let currentCategory = "食事";
         let currentTab = "vocab";
         let userData = [];
         let allData = [];
 
-        // ========================================
-        // INITIALIZE
-        // ========================================
+        // INIT
         function init() {
             loadUserData();
             mergeData();
@@ -742,9 +818,7 @@
             allData = [...defaultData, ...userData];
         }
 
-        // ========================================
         // RENDER
-        // ========================================
         function renderItems() {
             const filtered = allData.filter(item => 
                 item.category === currentCategory && 
@@ -757,26 +831,38 @@
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">📭</div>
-                        <div>項目がありません</div>
+                        <div class="empty-state-text">項目がありません</div>
                     </div>
                 `;
                 return;
             }
 
             container.innerHTML = filtered.map(item => `
-                <div class="item" data-id="${item.id}" data-text="${item.example}">
-                    <div class="item-jp">${item.jp}</div>
-                    ${item.furigana ? `<div class="item-furigana">${item.furigana}</div>` : ''}
-                    <div class="item-meaning">${item.meaning_vi}</div>
+                <div class="item">
+                    <div class="item-header">
+                        <div class="item-main">
+                            <div class="item-jp">${item.jp}</div>
+                            ${item.furigana ? `<div class="item-furigana">${item.furigana}</div>` : ''}
+                            <div class="item-meaning">${item.meaning_vi}</div>
+                        </div>
+                        ${item.source === 'user' ? '<span class="item-badge">追加</span>' : ''}
+                    </div>
                     <div class="item-example">${item.example}</div>
-                    ${item.source === 'user' ? '<span class="item-badge">追加</span>' : ''}
+                    <div class="item-buttons">
+                        <button class="item-btn btn-word" data-text="${item.jp}">
+                            📝 単語
+                        </button>
+                        <button class="item-btn btn-example" data-text="${item.example}">
+                            📋 例文
+                        </button>
+                    </div>
                 </div>
             `).join('');
 
-            // Add click handlers
-            document.querySelectorAll('.item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const text = item.dataset.text;
+            document.querySelectorAll('.item-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const text = btn.dataset.text;
                     appendToEditor(text);
                 });
             });
@@ -784,22 +870,20 @@
 
         function appendToEditor(text) {
             const editor = document.getElementById('editorText');
-            const currentText = editor.value;
+            const currentText = editor.value.trim();
             
-            if (currentText && !currentText.endsWith('\n')) {
+            if (currentText) {
                 editor.value = currentText + '\n' + text;
             } else {
-                editor.value = currentText + text;
+                editor.value = text;
             }
             
-            showToast('追加しました');
+            editor.scrollTop = editor.scrollHeight;
+            showToast('✓ 追加しました');
         }
 
-        // ========================================
-        // EVENT LISTENERS
-        // ========================================
+        // EVENTS
         function setupEventListeners() {
-            // Category pills
             document.querySelectorAll('.category-pill').forEach(pill => {
                 pill.addEventListener('click', () => {
                     document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
@@ -809,7 +893,6 @@
                 });
             });
 
-            // Tabs
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => {
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -819,69 +902,55 @@
                 });
             });
 
-            // Copy button
             document.getElementById('copyBtn').addEventListener('click', () => {
                 const text = document.getElementById('editorText').value;
                 if (!text) {
-                    showToast('コピーするテキストがありません');
+                    showToast('⚠️ テキストがありません');
                     return;
                 }
                 
                 navigator.clipboard.writeText(text).then(() => {
-                    showToast('コピーしました！');
+                    showToast('✓ コピーしました');
                 }).catch(() => {
-                    showToast('コピーに失敗しました');
+                    showToast('✗ コピー失敗');
                 });
             });
 
-            // Clear button
             document.getElementById('clearBtn').addEventListener('click', () => {
                 if (confirm('作成エリアをクリアしますか？')) {
                     document.getElementById('editorText').value = '';
-                    showToast('クリアしました');
+                    showToast('✓ クリアしました');
                 }
             });
 
-            // Add button
             document.getElementById('addBtn').addEventListener('click', () => {
                 document.getElementById('addModal').classList.add('active');
                 document.getElementById('addCategory').value = currentCategory;
                 document.getElementById('addType').value = currentTab;
             });
 
-            // Cancel add
-            document.getElementById('cancelAddBtn').addEventListener('click', () => {
-                closeAddModal();
-            });
+            document.getElementById('cancelAddBtn').addEventListener('click', closeAddModal);
+            document.getElementById('saveAddBtn').addEventListener('click', saveNewItem);
 
-            // Save add
-            document.getElementById('saveAddBtn').addEventListener('click', () => {
-                saveNewItem();
-            });
-
-            // Settings button
             document.getElementById('settingsBtn').addEventListener('click', () => {
                 document.getElementById('settingsModal').classList.add('active');
             });
 
-            // Close settings
             document.getElementById('closeSettingsBtn').addEventListener('click', () => {
                 document.getElementById('settingsModal').classList.remove('active');
             });
 
-            // Reset button
             document.getElementById('resetBtn').addEventListener('click', () => {
-                if (confirm('追加したすべてのデータを削除しますか？この操作は取り消せません。')) {
+                if (confirm('追加データをすべて削除しますか？')) {
                     localStorage.removeItem('kaigoUserData');
                     userData = [];
                     mergeData();
                     renderItems();
-                    showToast('リセットしました');
+                    showToast('✓ リセットしました');
                     document.getElementById('settingsModal').classList.remove('active');
                 }
             });
 
-            // Dark mode toggle
             document.getElementById('darkModeBtn').addEventListener('click', () => {
                 document.body.classList.toggle('dark-mode');
                 const isDark = document.body.classList.contains('dark-mode');
@@ -889,7 +958,6 @@
                 document.getElementById('darkModeBtn').textContent = isDark ? '☀️' : '🌙';
             });
 
-            // Close modals on background click
             document.querySelectorAll('.modal').forEach(modal => {
                 modal.addEventListener('click', (e) => {
                     if (e.target === modal) {
@@ -899,9 +967,6 @@
             });
         }
 
-        // ========================================
-        // ADD ITEM FUNCTIONS
-        // ========================================
         function saveNewItem() {
             const category = document.getElementById('addCategory').value;
             const type = document.getElementById('addType').value;
@@ -910,9 +975,8 @@
             const meaning = document.getElementById('addMeaning').value.trim();
             const example = document.getElementById('addExample').value.trim();
 
-            // Validation
             if (!jp || !meaning || !example) {
-                showToast('必須項目を入力してください');
+                showToast('⚠️ 必須項目を入力してください');
                 return;
             }
 
@@ -932,21 +996,17 @@
             mergeData();
             renderItems();
             closeAddModal();
-            showToast('追加しました！');
+            showToast('✓ 追加しました');
         }
 
         function closeAddModal() {
             document.getElementById('addModal').classList.remove('active');
-            // Clear form
             document.getElementById('addJp').value = '';
             document.getElementById('addFurigana').value = '';
             document.getElementById('addMeaning').value = '';
             document.getElementById('addExample').value = '';
         }
 
-        // ========================================
-        // UTILITY FUNCTIONS
-        // ========================================
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -965,9 +1025,6 @@
             }
         }
 
-        // ========================================
-        // START APP
-        // ========================================
         init();
     </script>
 </body>
