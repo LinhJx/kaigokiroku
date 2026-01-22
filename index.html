@@ -1,1 +1,1085 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>介護記録サポート - TRAN VI LINH</title>
+    <style>
+        /*
+         * 介護記録サポートアプリ
+         * Copyright © 2025 TRAN VI LINH
+         * All Rights Reserved
+         */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
+        :root {
+            --primary: #2196F3;
+            --primary-dark: #1976D2;
+            --secondary: #4CAF50;
+            --danger: #F44336;
+            --bg: #F5F7FA;
+            --card-bg: #FFFFFF;
+            --text: #212121;
+            --text-light: #757575;
+            --border: #E0E0E0;
+            --shadow: rgba(0,0,0,0.08);
+            --shadow-hover: rgba(0,0,0,0.12);
+        }
+
+        body.dark-mode {
+            --bg: #121212;
+            --card-bg: #1E1E1E;
+            --text: #FFFFFF;
+            --text-light: #B0B0B0;
+            --border: #333333;
+            --shadow: rgba(0,0,0,0.4);
+            --shadow-hover: rgba(0,0,0,0.6);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+
+        /* Header - Compact */
+        .header {
+            background: var(--card-bg);
+            padding: 12px 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .icon-btn:active {
+            transform: scale(0.9);
+            background: var(--border);
+        }
+
+        /* Categories - Horizontal Scroll */
+        .categories {
+            padding: 12px;
+            background: var(--card-bg);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .categories::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-pills {
+            display: flex;
+            gap: 10px;
+            min-width: min-content;
+            padding-bottom: 2px;
+        }
+
+        .category-pill {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 24px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px var(--shadow);
+            flex-shrink: 0;
+        }
+
+        .category-pill.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+            transform: scale(1.05);
+        }
+
+        .category-pill:active {
+            transform: scale(0.95);
+        }
+
+        /* Tabs - Simple */
+        .tabs {
+            display: flex;
+            background: var(--card-bg);
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 64px;
+            z-index: 90;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-light);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+
+        /* Items List - Card Style */
+        .items-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            padding-bottom: 200px;
+        }
+
+        /* ITEM CARD - Redesigned for Easy Tap */
+        .item {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: all 0.2s;
+        }
+
+        .item:active {
+            box-shadow: 0 4px 16px var(--shadow-hover);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .item-main {
+            flex: 1;
+        }
+
+        .item-jp {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .item-furigana {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .item-meaning {
+            font-size: 15px;
+            color: var(--secondary);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .item-example {
+            font-size: 14px;
+            color: var(--text-light);
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 10px;
+            border-left: 3px solid var(--primary);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .item-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        /* ACTION BUTTONS - LARGE & CLEAR */
+        .item-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .item-btn {
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px var(--shadow);
+            min-height: 52px;
+        }
+
+        .item-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 3px var(--shadow);
+        }
+
+        .btn-word {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-example {
+            background: var(--card-bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .btn-example:active {
+            background: var(--bg);
+        }
+
+        /* Editor Section - Fixed Bottom */
+        .editor-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 2px solid var(--border);
+            padding: 16px;
+            box-shadow: 0 -4px 12px var(--shadow);
+            z-index: 80;
+        }
+
+        .editor-header {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .editor-textarea {
+            width: 100%;
+            height: 80px;
+            padding: 12px;
+            font-size: 15px;
+            line-height: 1.6;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg);
+            color: var(--text);
+            resize: none;
+            font-family: inherit;
+            margin-bottom: 12px;
+        }
+
+        .editor-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .editor-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 48px;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-copy {
+            background: linear-gradient(135deg, var(--secondary), #45a049);
+            color: white;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-clear {
+            background: var(--bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Modal - Improved */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: flex-end;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 24px 24px 0 0;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 -4px 24px var(--shadow);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 24px 20px 16px;
+            border-bottom: 2px solid var(--border);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            z-index: 10;
+        }
+
+        .modal-header::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            padding: 16px 20px 24px;
+            border-top: 2px solid var(--border);
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 12px;
+            position: sticky;
+            bottom: 0;
+            background: var(--card-bg);
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 220px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text);
+            color: var(--card-bg);
+            padding: 16px 28px;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 600;
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Settings */
+        .settings-item {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-label {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .settings-description {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
+            .modal-content {
+                border-radius: 24px;
+                max-width: 500px;
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1>🏥 介護記録</h1>
+                <div class="header-actions">
+                    <button class="icon-btn" id="settingsBtn" title="設定">⚙️</button>
+                    <button class="icon-btn" id="darkModeBtn" title="ダークモード">🌙</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="categories">
+            <div class="category-pills">
+                <button class="category-pill active" data-category="食事">🍚 食事</button>
+                <button class="category-pill" data-category="排泄">🚻 排泄</button>
+                <button class="category-pill" data-category="入浴">🛁 入浴</button>
+                <button class="category-pill" data-category="服薬">💊 服薬</button>
+                <button class="category-pill" data-category="水分補給">💧 水分</button>
+                <button class="category-pill" data-category="体調">❤️ 体調</button>
+                <button class="category-pill" data-category="事故・異常">⚠️ 事故</button>
+                <button class="category-pill" data-category="その他">📋 その他</button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="vocab">📝 単語</button>
+                <button class="tab" data-tab="grammar">📋 文例</button>
+            </div>
+
+            <!-- Items List -->
+            <div class="items-container" id="itemsList">
+                <!-- Items will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Editor (Fixed Bottom) -->
+        <div class="editor-section">
+            <div class="editor-header">✍️ 作成エリア</div>
+            <textarea class="editor-textarea" id="editorText" placeholder="選択した内容がここに表示されます"></textarea>
+            <div class="editor-actions">
+                <button class="btn btn-copy" id="copyBtn">📋 コピー</button>
+                <button class="btn btn-clear" id="clearBtn">🗑️ クリア</button>
+                <button class="btn btn-add" id="addBtn">＋ 追加</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Item Modal -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">新しい項目を追加</div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">カテゴリ *</label>
+                    <select class="form-select" id="addCategory">
+                        <option value="食事">🍚 食事</option>
+                        <option value="排泄">🚻 排泄</option>
+                        <option value="入浴">🛁 入浴</option>
+                        <option value="服薬">💊 服薬</option>
+                        <option value="水分補給">💧 水分補給</option>
+                        <option value="体調">❤️ 体調</option>
+                        <option value="事故・異常">⚠️ 事故・異常</option>
+                        <option value="その他">📋 その他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">タイプ *</label>
+                    <select class="form-select" id="addType">
+                        <option value="vocab">単語</option>
+                        <option value="grammar">文例</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">日本語 *</label>
+                    <input type="text" class="form-input" id="addJp" placeholder="全量摂取">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ふりがな</label>
+                    <input type="text" class="form-input" id="addFurigana" placeholder="ぜんりょうせっしゅ">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nghĩa tiếng Việt *</label>
+                    <input type="text" class="form-input" id="addMeaning" placeholder="Ăn hết phần">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">例文（介護記録形式）*</label>
+                    <textarea class="form-textarea" id="addExample" placeholder="昼食を全量摂取しました。"></textarea>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-clear" id="cancelAddBtn">キャンセル</button>
+                <button class="btn btn-copy" id="saveAddBtn">💾 保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">設定</div>
+            <div class="modal-body">
+                <div class="settings-item">
+                    <div class="settings-label">データリセット</div>
+                    <div class="settings-description">追加したすべてのデータを削除します（デフォルトデータは残ります）</div>
+                    <button class="btn btn-clear" id="resetBtn" style="width: 100%;">🗑️ リセット</button>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-copy" id="closeSettingsBtn" style="grid-column: 1 / -1;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        /*
+         * 介護記録サポートアプリ
+         * Copyright © 2025 TRAN VI LINH
+         * All Rights Reserved
+         * Unauthorized copying or distribution prohibited
+         */
+        
+        // DEFAULT DATA - EXPANDED
+        const defaultData = [
+            // 食事 - 単語 (30 items)
+            {id:1,category:"食事",type:"vocab",jp:"全量摂取",furigana:"ぜんりょうせっしゅ",meaning_vi:"Ăn hết phần",example:"昼食を全量摂取しました。",source:"default"},
+            {id:2,category:"食事",type:"vocab",jp:"半量摂取",furigana:"はんりょうせっしゅ",meaning_vi:"Ăn một nửa",example:"朝食を半量摂取しました。",source:"default"},
+            {id:3,category:"食事",type:"vocab",jp:"少量摂取",furigana:"しょうりょうせっしゅ",meaning_vi:"Ăn ít",example:"少量摂取されました。",source:"default"},
+            {id:4,category:"食事",type:"vocab",jp:"摂取拒否",furigana:"せっしゅきょひ",meaning_vi:"Từ chối ăn",example:"摂取拒否がありました。",source:"default"},
+            {id:5,category:"食事",type:"vocab",jp:"食欲良好",furigana:"しょくよくりょうこう",meaning_vi:"Ăn ngon miệng",example:"食欲良好でした。",source:"default"},
+            {id:6,category:"食事",type:"vocab",jp:"食欲不振",furigana:"しょくよくふしん",meaning_vi:"Chán ăn",example:"食欲不振が見られました。",source:"default"},
+            {id:7,category:"食事",type:"vocab",jp:"むせ込み",furigana:"むせこみ",meaning_vi:"Sặc, hóc",example:"むせ込みがありました。",source:"default"},
+            {id:8,category:"食事",type:"vocab",jp:"誤嚥",furigana:"ごえん",meaning_vi:"Sặc vào phổi",example:"誤嚥の可能性があります。",source:"default"},
+            {id:9,category:"食事",type:"vocab",jp:"自力摂取",furigana:"じりきせっしゅ",meaning_vi:"Tự ăn được",example:"自力摂取されました。",source:"default"},
+            {id:10,category:"食事",type:"vocab",jp:"一部介助",furigana:"いちぶかいじょ",meaning_vi:"Hỗ trợ một phần",example:"一部介助で摂取しました。",source:"default"},
+            {id:11,category:"食事",type:"vocab",jp:"全介助",furigana:"ぜんかいじょ",meaning_vi:"Hỗ trợ hoàn toàn",example:"全介助で摂取しました。",source:"default"},
+            {id:12,category:"食事",type:"vocab",jp:"おかゆ",furigana:"おかゆ",meaning_vi:"Cháo",example:"おかゆを提供しました。",source:"default"},
+            {id:13,category:"食事",type:"vocab",jp:"きざみ食",furigana:"きざみしょく",meaning_vi:"Thức ăn băm nhỏ",example:"きざみ食を提供しました。",source:"default"},
+            {id:14,category:"食事",type:"vocab",jp:"ミキサー食",furigana:"みきさーしょく",meaning_vi:"Thức ăn xay nhuyễn",example:"ミキサー食を提供しました。",source:"default"},
+            {id:15,category:"食事",type:"vocab",jp:"とろみ",furigana:"とろみ",meaning_vi:"Chất làm đặc",example:"とろみをつけました。",source:"default"},
+            {id:16,category:"食事",type:"vocab",jp:"声かけ",furigana:"こえかけ",meaning_vi:"Nhắc nhở, động viên",example:"声かけを行いました。",source:"default"},
+            {id:17,category:"食事",type:"vocab",jp:"見守り",furigana:"みまもり",meaning_vi:"Giám sát",example:"見守りを行いました。",source:"default"},
+            {id:18,category:"食事",type:"vocab",jp:"お箸",furigana:"おはし",meaning_vi:"Đũa",example:"お箸で食事されました。",source:"default"},
+            {id:19,category:"食事",type:"vocab",jp:"スプーン",furigana:"すぷーん",meaning_vi:"Thìa",example:"スプーンで介助しました。",source:"default"},
+            {id:20,category:"食事",type:"vocab",jp:"完食",furigana:"かんしょく",meaning_vi:"Ăn hết sạch",example:"完食されました。",source:"default"},
+            {id:21,category:"食事",type:"vocab",jp:"残食",furigana:"ざんしょく",meaning_vi:"Còn thừa",example:"残食がありました。",source:"default"},
+            {id:22,category:"食事",type:"vocab",jp:"嚥下",furigana:"えんげ",meaning_vi:"Nuốt",example:"嚥下状態を確認しました。",source:"default"},
+            {id:23,category:"食事",type:"vocab",jp:"水分",furigana:"すいぶん",meaning_vi:"Nước",example:"水分を摂取しました。",source:"default"},
+            {id:24,category:"食事",type:"vocab",jp:"配膳",furigana:"はいぜん",meaning_vi:"Dọn bàn ăn",example:"配膳を行いました。",source:"default"},
+            {id:25,category:"食事",type:"vocab",jp:"下膳",furigana:"げぜん",meaning_vi:"Dọn bát đĩa",example:"下膳を行いました。",source:"default"},
+            {id:26,category:"食事",type:"vocab",jp:"食後",furigana:"しょくご",meaning_vi:"Sau bữa ăn",example:"食後の様子を観察しました。",source:"default"},
+            {id:27,category:"食事",type:"vocab",jp:"咀嚼",furigana:"そしゃく",meaning_vi:"Nhai",example:"咀嚼が困難でした。",source:"default"},
+            {id:28,category:"食事",type:"vocab",jp:"口腔ケア",furigana:"こうくうけあ",meaning_vi:"Chăm sóc răng miệng",example:"食後に口腔ケアを行いました。",source:"default"},
+            {id:29,category:"食事",type:"vocab",jp:"義歯",furigana:"ぎし",meaning_vi:"Răng giả",example:"義歯を装着しました。",source:"default"},
+            {id:30,category:"食事",type:"vocab",jp:"食前",furigana:"しょくぜん",meaning_vi:"Trước bữa ăn",example:"食前に手洗いを行いました。",source:"default"},
+
+            // 食事 - 文例 (20 items)
+            {id:31,category:"食事",type:"grammar",jp:"朝食を全量摂取しました",furigana:"ちょうしょくをぜんりょうせっしゅしました",meaning_vi:"Đã ăn hết bữa sáng",example:"朝食を全量摂取しました。",source:"default"},
+            {id:32,category:"食事",type:"grammar",jp:"昼食を半量残されました",furigana:"ちゅうしょくをはんりょうのこされました",meaning_vi:"Còn lại một nửa bữa trưa",example:"昼食を半量残されました。",source:"default"},
+            {id:33,category:"食事",type:"grammar",jp:"食事を拒否されました",furigana:"しょくじをきょひされました",meaning_vi:"Đã từ chối bữa ăn",example:"食事を拒否されました。",source:"default"},
+            {id:34,category:"食事",type:"grammar",jp:"むせ込みがありました",furigana:"むせこみがありました",meaning_vi:"Có hiện tượng sặc",example:"食事中にむせ込みがありました。",source:"default"},
+            {id:35,category:"食事",type:"grammar",jp:"食欲良好でした",furigana:"しょくよくりょうこうでした",meaning_vi:"Ăn uống tốt",example:"本日は食欲良好でした。",source:"default"},
+            {id:36,category:"食事",type:"grammar",jp:"一部介助で摂取しました",furigana:"いちぶかいじょでせっしゅしました",meaning_vi:"Ăn với hỗ trợ một phần",example:"一部介助で摂取しました。",source:"default"},
+            {id:37,category:"食事",type:"grammar",jp:"声かけにて完食されました",furigana:"こえかけにてかんしょくされました",meaning_vi:"Ăn hết sau khi động viên",example:"声かけにて完食されました。",source:"default"},
+            {id:38,category:"食事",type:"grammar",jp:"お箸で自力摂取されました",furigana:"おはしでじりきせっしゅされました",meaning_vi:"Tự ăn bằng đũa",example:"お箸で自力摂取されました。",source:"default"},
+            {id:39,category:"食事",type:"grammar",jp:"スプーンで全介助しました",furigana:"すぷーんでぜんかいじょしました",meaning_vi:"Hỗ trợ toàn bộ bằng thìa",example:"スプーンで全介助しました。",source:"default"},
+            {id:40,category:"食事",type:"grammar",jp:"おかゆを提供しました",furigana:"おかゆをていきょうしました",meaning_vi:"Đã phục vụ cháo",example:"おかゆを提供しました。",source:"default"},
+            {id:41,category:"食事",type:"grammar",jp:"きざみ食に変更しました",furigana:"きざみしょくにへんこうしました",meaning_vi:"Đã đổi sang thức ăn băm nhỏ",example:"きざみ食に変更しました。",source:"default"},
+            {id:42,category:"食事",type:"grammar",jp:"とろみをつけて提供しました",furigana:"とろみをつけてていきょうしました",meaning_vi:"Đã làm đặc và phục vụ",example:"とろみをつけて提供しました。",source:"default"},
+            {id:43,category:"食事",type:"grammar",jp:"見守りにて摂取されました",furigana:"みまもりにてせっしゅされました",meaning_vi:"Đã ăn dưới sự giám sát",example:"見守りにて摂取されました。",source:"default"},
+            {id:44,category:"食事",type:"grammar",jp:"ゆっくりと摂取されました",furigana:"ゆっくりとせっしゅされました",meaning_vi:"Đã ăn từ từ",example:"ゆっくりと摂取されました。",source:"default"},
+            {id:45,category:"食事",type:"grammar",jp:"嚥下状態を確認しながら介助しました",furigana:"えんげじょうたいをかくにんしながらかいじょしました",meaning_vi:"Đã hỗ trợ trong khi kiểm tra tình trạng nuốt",example:"嚥下状態を確認しながら介助しました。",source:"default"},
+            {id:46,category:"食事",type:"grammar",jp:"食後に口腔ケアを行いました",furigana:"しょくごにこうくうけあをおこないました",meaning_vi:"Đã chăm sóc răng miệng sau bữa ăn",example:"食後に口腔ケアを行いました。",source:"default"},
+            {id:47,category:"食事",type:"grammar",jp:"義歯を装着して食事されました",furigana:"ぎしをそうちゃくしてしょくじされました",meaning_vi:"Đã ăn với răng giả",example:"義歯を装着して食事されました。",source:"default"},
+            {id:48,category:"食事",type:"grammar",jp:"水分補給を促しました",furigana:"すいぶんほきゅうをうながしました",meaning_vi:"Đã khuyến khích uống nước",example:"水分補給を促しました。",source:"default"},
+            {id:49,category:"食事",type:"grammar",jp:"食事時間を延長しました",furigana:"しょくじじかんをえんちょうしました",meaning_vi:"Đã kéo dài thời gian ăn",example:"食事時間を延長しました。",source:"default"},
+            {id:50,category:"食事",type:"grammar",jp:"好きなものから食べられました",furigana:"すきなものからたべられました",meaning_vi:"Đã ăn từ món yêu thích",example:"好きなものから食べられました。",source:"default"},
+
+            // 排泄 - 単語 (25 items)
+            {id:51,category:"排泄",type:"vocab",jp:"排尿",furigana:"はいにょう",meaning_vi:"Đi tiểu",example:"排尿がありました。",source:"default"},
+            {id:52,category:"排泄",type:"vocab",jp:"排便",furigana:"はいべん",meaning_vi:"Đi đại tiện",example:"排便がありました。",source:"default"},
+            {id:53,category:"排泄",type:"vocab",jp:"失禁",furigana:"しっきん",meaning_vi:"Tiểu không tự chủ",example:"失禁がありました。",source:"default"},
+            {id:54,category:"排泄",type:"vocab",jp:"便秘",furigana:"べんぴ",meaning_vi:"Táo bón",example:"便秘が続いています。",source:"default"},
+            {id:55,category:"排泄",type:"vocab",jp:"下痢",furigana:"げり",meaning_vi:"Tiêu chảy",example:"下痢の症状がありました。",source:"default"},
+            {id:56,category:"排泄",type:"vocab",jp:"普通便",furigana:"ふつうべん",meaning_vi:"Phân bình thường",example:"普通便でした。",source:"default"},
+            {id:57,category:"排泄",type:"vocab",jp:"軟便",furigana:"なんべん",meaning_vi:"Phân mềm",example:"軟便でした。",source:"default"},
+            {id:58,category:"排泄",type:"vocab",jp:"硬便",furigana:"こうべん",meaning_vi:"Phân cứng",example:"硬便でした。",source:"default"},
+            {id:59,category:"排泄",type:"vocab",jp:"オムツ交換",furigana:"おむつこうかん",meaning_vi:"Thay bỉm",example:"オムツ交換を行いました。",source:"default"},
+            {id:60,category:"排泄",type:"vocab",jp:"トイレ誘導",furigana:"といれゆうどう",meaning_vi:"Dẫn đi vệ sinh",example:"トイレ誘導を行いました。",source:"default"},
+            {id:61,category:"排泄",type:"vocab",jp:"尿意",furigana:"にょうい",meaning_vi:"Ý thức muốn đi tiểu",example:"尿意の訴えがありました。",source:"default"},
+            {id:62,category:"排泄",type:"vocab",jp:"便意",furigana:"べんい",meaning_vi:"Ý thức muốn đi cầu",example:"便意の訴えがありました。",source:"default"},
+            {id:63,category:"排泄",type:"vocab",jp:"陰部洗浄",furigana:"いんぶせんじょう",meaning_vi:"Vệ sinh vùng kín",example:"陰部洗浄を行いました。",source:"default"},
+            {id:64,category:"排泄",type:"vocab",jp:"パッド",furigana:"ぱっど",meaning_vi:"Miếng lót",example:"パッドを交換しました。",source:"default"},
+            {id:65,category:"排泄",type:"vocab",jp:"ポータブルトイレ",furigana:"ぽーたぶるといれ",meaning_vi:"Bô di động",example:"ポータブルトイレを使用しました。",source:"default"},
+            {id:66,category:"排泄",type:"vocab",jp:"尿量",furigana:"にょうりょう",meaning_vi:"Lượng nước tiểu",example:"尿量を確認しました。",source:"default"},
+            {id:67,category:"排泄",type:"vocab",jp:"便量",furigana:"べんりょう",meaning_vi:"Lượng phân",example:"便量は少量でした。",source:"default"},
+            {id:68,category:"排泄",type:"vocab",jp:"残尿感",furigana:"ざんにょうかん",meaning_vi:"Cảm giác tiểu không hết",example:"残尿感の訴えがありました。",source:"default"},
+            {id:69,category:"排泄",type:"vocab",jp:"頻尿",furigana:"ひんにょう",meaning_vi:"Tiểu nhiều lần",example:"頻尿の症状がありました。",source:"default"},
+            {id:70,category:"排泄",type:"vocab",jp:"水様便",furigana:"すいようべん",meaning_vi:"Phân lỏng như nước",example:"水様便でした。",source:"default"},
+            {id:71,category:"排泄",type:"vocab",jp:"血便",furigana:"けつべん",meaning_vi:"Phân có máu",example:"血便が見られました。",source:"default"},
+            {id:72,category:"排泄",type:"vocab",jp:"便臭",furigana:"べんしゅう",meaning_vi:"Mùi phân",example:"便臭を確認しました。",source:"default"},
+            {id:73,category:"排泄",type:"vocab",jp:"排泄パターン",furigana:"はいせつぱたーん",meaning_vi:"Mô hình đại tiểu",example:"排泄パターンを記録しました。",source:"default"},
+            {id:74,category:"排泄",type:"vocab",jp:"自立",furigana:"じりつ",meaning_vi:"Tự lập",example:"排泄は自立されています。",source:"default"},
+            {id:75,category:"排泄",type:"vocab",jp:"介助",furigana:"かいじょ",meaning_vi:"Hỗ trợ",example:"排泄介助を行いました。",source:"default"},
+
+            // 排泄 - 文例 (15 items)meaning_vi:"Sau bữa sáng",example:"朝食後に服薬しました。",source:"default"},
+            {id:41,category:"服薬",type:"grammar",jp:"朝食後に服薬しました",furigana:"ちょうしょくごにふくやくしました",meaning_vi:"Đã uống thuốc sau bữa sáng",example:"朝食後に服薬しました。",source:"default"},
+            {id:42,category:"服薬",type:"grammar",jp:"問題なく服薬できました",furigana:"もんだいなくふくやくできました",meaning_vi:"Uống thuốc không có vấn đề",example:"問題なく服薬できました。",source:"default"},
+            {id:43,category:"水分補給",type:"vocab",jp:"水分摂取",furigana:"すいぶんせっしゅ",meaning_vi:"Uống nước",example:"水分摂取しました。",source:"default"},
+            {id:44,category:"水分補給",type:"vocab",jp:"お茶",furigana:"おちゃ",meaning_vi:"Trà",example:"お茶を提供しました。",source:"default"},
+            {id:45,category:"水分補給",type:"vocab",jp:"麦茶",furigana:"むぎちゃ",meaning_vi:"Trà lúa mạch",example:"麦茶を提供しました。",source:"default"},
+            {id:46,category:"水分補給",type:"grammar",jp:"水分補給を行いました",furigana:"すいぶんほきゅうをおこないました",meaning_vi:"Đã bổ sung nước",example:"水分補給を行いました。",source:"default"},
+            {id:47,category:"水分補給",type:"grammar",jp:"お茶を200ml摂取しました",furigana:"おちゃを200mlせっしゅしました",meaning_vi:"Đã uống 200ml trà",example:"お茶を200ml摂取しました。",source:"default"},
+            {id:48,category:"体調",type:"vocab",jp:"体調良好",furigana:"たいちょうりょうこう",meaning_vi:"Sức khỏe tốt",example:"体調良好でした。",source:"default"},
+            {id:49,category:"体調",type:"vocab",jp:"発熱",furigana:"はつねつ",meaning_vi:"Sốt",example:"発熱がありました。",source:"default"},
+            {id:50,category:"体調",type:"vocab",jp:"咳",furigana:"せき",meaning_vi:"Ho",example:"咳が見られました。",source:"default"},
+            {id:51,category:"体調",type:"vocab",jp:"痰",furigana:"たん",meaning_vi:"Đờm",example:"痰がありました。",source:"default"},
+            {id:52,category:"体調",type:"vocab",jp:"頭痛",furigana:"ずつう",meaning_vi:"Đau đầu",example:"頭痛の訴えがありました。",source:"default"},
+            {id:53,category:"体調",type:"vocab",jp:"腹痛",furigana:"ふくつう",meaning_vi:"Đau bụng",example:"腹痛の訴えがありました。",source:"default"},
+            {id:54,category:"体調",type:"vocab",jp:"嘔吐",furigana:"おうと",meaning_vi:"Nôn mửa",example:"嘔吐がありました。",source:"default"},
+            {id:55,category:"体調",type:"vocab",jp:"血圧測定",furigana:"けつあつそくてい",meaning_vi:"Đo huyết áp",example:"血圧測定を行いました。",source:"default"},
+            {id:56,category:"体調",type:"vocab",jp:"体温測定",furigana:"たいおんそくてい",meaning_vi:"Đo thân nhiệt",example:"体温測定を行いました。",source:"default"},
+            {id:57,category:"体調",type:"grammar",jp:"体調良好で過ごされました",furigana:"たいちょうりょうこうですごされました",meaning_vi:"Đã sinh hoạt với sức khỏe tốt",example:"体調良好で過ごされました。",source:"default"},
+            {id:58,category:"体調",type:"grammar",jp:"37.5度の発熱がありました",furigana:"37.5どのはつねつがありました",meaning_vi:"Có sốt 37.5 độ",example:"37.5度の発熱がありました。",source:"default"},
+            {id:59,category:"体調",type:"grammar",jp:"血圧は120/80でした",furigana:"けつあつは120/80でした",meaning_vi:"Huyết áp là 120/80",example:"血圧は120/80でした。",source:"default"},
+            {id:60,category:"事故・異常",type:"vocab",jp:"転倒",furigana:"てんとう",meaning_vi:"Té ngã",example:"転倒がありました。",source:"default"},
+            {id:61,category:"事故・異常",type:"vocab",jp:"転落",furigana:"てんらく",meaning_vi:"Rơi xuống",example:"転落がありました。",source:"default"},
+            {id:62,category:"事故・異常",type:"vocab",jp:"打撲",furigana:"だぼく",meaning_vi:"Bầm tím",example:"打撲しました。",source:"default"},
+            {id:63,category:"事故・異常",type:"vocab",jp:"擦過傷",furigana:"さっかしょう",meaning_vi:"Trầy xước",example:"擦過傷がありました。",source:"default"},
+            {id:64,category:"事故・異常",type:"vocab",jp:"異常なし",furigana:"いじょうなし",meaning_vi:"Không có bất thường",example:"異常なしでした。",source:"default"},
+            {id:65,category:"事故・異常",type:"grammar",jp:"転倒されましたが外傷はありませんでした",furigana:"てんとうされましたががいしょうはありませんでした",meaning_vi:"Té nhưng không có vết thương",example:"転倒されましたが外傷はありませんでした。",source:"default"},
+            {id:66,category:"事故・異常",type:"grammar",jp:"本日は異常ありませんでした",furigana:"ほんじつはいじょうありませんでした",meaning_vi:"Hôm nay không có bất thường",example:"本日は異常ありませんでした。",source:"default"},
+            {id:67,category:"その他",type:"vocab",jp:"レクリエーション",furigana:"れくりえーしょん",meaning_vi:"Giải trí",example:"レクリエーションに参加しました。",source:"default"},
+            {id:68,category:"その他",type:"vocab",jp:"散歩",furigana:"さんぽ",meaning_vi:"Đi dạo",example:"散歩を行いました。",source:"default"},
+            {id:69,category:"その他",type:"vocab",jp:"面会",furigana:"めんかい",meaning_vi:"Thăm viếng",example:"ご家族の面会がありました。",source:"default"},
+            {id:70,category:"その他",type:"vocab",jp:"就寝",furigana:"しゅうしん",meaning_vi:"Đi ngủ",example:"就寝しました。",source:"default"},
+            {id:71,category:"その他",type:"vocab",jp:"起床",furigana:"きしょう",meaning_vi:"Thức dậy",example:"起床されました。",source:"default"},
+            {id:72,category:"その他",type:"vocab",jp:"機嫌良好",furigana:"きげんりょうこう",meaning_vi:"Tâm trạng tốt",example:"機嫌良好でした。",source:"default"},
+            {id:73,category:"その他",type:"grammar",jp:"レクリエーションに参加されました",furigana:"れくりえーしょんにさんかされました",meaning_vi:"Đã tham gia giải trí",example:"レクリエーションに参加されました。",source:"default"},
+            {id:74,category:"その他",type:"grammar",jp:"笑顔で過ごされました",furigana:"えがおですごされました",meaning_vi:"Đã sinh hoạt với nụ cười",example:"笑顔で過ごされました。",source:"default"},
+            {id:75,category:"その他",type:"grammar",jp:"穏やかに過ごされました",furigana:"おだやかにすごされました",meaning_vi:"Đã sinh hoạt yên tĩnh",example:"穏やかに過ごされました。",source:"default"}
+        ];
+
+        // STATE
+        let currentCategory = "食事";
+        let currentTab = "vocab";
+        let userData = [];
+        let allData = [];
+
+        // INIT
+        function init() {
+            loadUserData();
+            mergeData();
+            renderItems();
+            setupEventListeners();
+            loadDarkMode();
+        }
+
+        function loadUserData() {
+            const stored = localStorage.getItem('kaigoUserData');
+            userData = stored ? JSON.parse(stored) : [];
+        }
+
+        function saveUserData() {
+            localStorage.setItem('kaigoUserData', JSON.stringify(userData));
+        }
+
+        function mergeData() {
+            allData = [...defaultData, ...userData];
+        }
+
+        // RENDER
+        function renderItems() {
+            const filtered = allData.filter(item => 
+                item.category === currentCategory && 
+                item.type === currentTab
+            );
+
+            const container = document.getElementById('itemsList');
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <div class="empty-state-text">項目がありません</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => `
+                <div class="item">
+                    <div class="item-header">
+                        <div class="item-main">
+                            <div class="item-jp">${item.jp}</div>
+                            ${item.furigana ? `<div class="item-furigana">${item.furigana}</div>` : ''}
+                            <div class="item-meaning">${item.meaning_vi}</div>
+                        </div>
+                        ${item.source === 'user' ? '<span class="item-badge">追加</span>' : ''}
+                    </div>
+                    <div class="item-example">${item.example}</div>
+                    <div class="item-buttons">
+                        <button class="item-btn btn-word" data-text="${item.jp}">
+                            📝 単語
+                        </button>
+                        <button class="item-btn btn-example" data-text="${item.example}">
+                            📋 例文
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.item-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const text = btn.dataset.text;
+                    appendToEditor(text);
+                });
+            });
+        }
+
+        function appendToEditor(text) {
+            const editor = document.getElementById('editorText');
+            const currentText = editor.value.trim();
+            
+            if (currentText) {
+                editor.value = currentText + '\n' + text;
+            } else {
+                editor.value = text;
+            }
+            
+            editor.scrollTop = editor.scrollHeight;
+            showToast('✓ 追加しました');
+        }
+
+        // EVENTS
+        function setupEventListeners() {
+            document.querySelectorAll('.category-pill').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    currentCategory = pill.dataset.category;
+                    renderItems();
+                });
+            });
+
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentTab = tab.dataset.tab;
+                    renderItems();
+                });
+            });
+
+            document.getElementById('copyBtn').addEventListener('click', () => {
+                const text = document.getElementById('editorText').value;
+                if (!text) {
+                    showToast('⚠️ テキストがありません');
+                    return;
+                }
+                
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('✓ コピーしました');
+                }).catch(() => {
+                    showToast('✗ コピー失敗');
+                });
+            });
+
+            document.getElementById('clearBtn').addEventListener('click', () => {
+                if (confirm('作成エリアをクリアしますか？')) {
+                    document.getElementById('editorText').value = '';
+                    showToast('✓ クリアしました');
+                }
+            });
+
+            document.getElementById('addBtn').addEventListener('click', () => {
+                document.getElementById('addModal').classList.add('active');
+                document.getElementById('addCategory').value = currentCategory;
+                document.getElementById('addType').value = currentTab;
+            });
+
+            document.getElementById('cancelAddBtn').addEventListener('click', closeAddModal);
+            document.getElementById('saveAddBtn').addEventListener('click', saveNewItem);
+
+            document.getElementById('settingsBtn').addEventListener('click', () => {
+                document.getElementById('settingsModal').classList.add('active');
+            });
+
+            document.getElementById('closeSettingsBtn').addEventListener('click', () => {
+                document.getElementById('settingsModal').classList.remove('active');
+            });
+
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                if (confirm('追加データをすべて削除しますか？')) {
+                    localStorage.removeItem('kaigoUserData');
+                    userData = [];
+                    mergeData();
+                    renderItems();
+                    showToast('✓ リセットしました');
+                    document.getElementById('settingsModal').classList.remove('active');
+                }
+            });
+
+            document.getElementById('darkModeBtn').addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDark);
+                document.getElementById('darkModeBtn').textContent = isDark ? '☀️' : '🌙';
+            });
+
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
+            });
+        }
+
+        function saveNewItem() {
+            const category = document.getElementById('addCategory').value;
+            const type = document.getElementById('addType').value;
+            const jp = document.getElementById('addJp').value.trim();
+            const furigana = document.getElementById('addFurigana').value.trim();
+            const meaning = document.getElementById('addMeaning').value.trim();
+            const example = document.getElementById('addExample').value.trim();
+
+            if (!jp || !meaning || !example) {
+                showToast('⚠️ 必須項目を入力してください');
+                return;
+            }
+
+            const newItem = {
+                id: Date.now(),
+                category,
+                type,
+                jp,
+                furigana,
+                meaning_vi: meaning,
+                example,
+                source: 'user'
+            };
+
+            userData.push(newItem);
+            saveUserData();
+            mergeData();
+            renderItems();
+            closeAddModal();
+            showToast('✓ 追加しました');
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.remove('active');
+            document.getElementById('addJp').value = '';
+            document.getElementById('addFurigana').value = '';
+            document.getElementById('addMeaning').value = '';
+            document.getElementById('addExample').value = '';
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        function loadDarkMode() {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('darkModeBtn').textContent = '☀️';
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
